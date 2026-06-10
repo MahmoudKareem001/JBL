@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JBL ERP & POS</title>
+<style>
+:root{
+  --bg:#070707;--panel:#111216;--panel2:#191b22;--text:#f7f7f7;--muted:#a6a6a6;--brand:#ff6a00;--brand2:#ff8a28;--danger:#ef4444;--ok:#22c55e;--warn:#f59e0b;--line:rgba(255,255,255,.09);--shadow:0 20px 60px rgba(0,0,0,.35);
+}
+body.light{--bg:#f3f4f6;--panel:#ffffff;--panel2:#f8fafc;--text:#111827;--muted:#64748b;--line:rgba(15,23,42,.1);--shadow:0 20px 55px rgba(15,23,42,.12)}
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:radial-gradient(circle at top left,rgba(255,106,0,.25),transparent 32%),var(--bg);color:var(--text);min-height:100vh}
+button,input,select,textarea{font-family:inherit}button{cursor:pointer}
+.hidden{display:none!important}.app{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+.sidebar{background:linear-gradient(180deg,#0a0a0b,var(--panel));border-inline-end:1px solid var(--line);padding:18px;position:sticky;top:0;height:100vh;overflow:auto}
+.light .sidebar{background:linear-gradient(180deg,#fff,#f8fafc)}
+.logo{display:flex;align-items:center;gap:12px;margin-bottom:22px}.logo-badge{background:var(--brand);color:#fff;font-weight:900;font-size:30px;padding:9px 13px;border-radius:14px;box-shadow:0 10px 30px rgba(255,106,0,.45)}.logo small{display:block;color:var(--muted)}
+.nav button{width:100%;border:0;background:transparent;color:var(--text);padding:13px 14px;border-radius:14px;text-align:start;margin:4px 0;font-weight:700;display:flex;gap:10px;align-items:center}
+.nav button:hover,.nav button.active{background:linear-gradient(90deg,rgba(255,106,0,.22),transparent);color:var(--brand)}
+.main{padding:18px 22px}.topbar{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:20px}.top-actions{display:flex;gap:9px;flex-wrap:wrap}
+.btn{border:0;border-radius:13px;padding:10px 14px;background:var(--panel2);color:var(--text);border:1px solid var(--line);font-weight:800}.btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border:0}.btn.danger{background:var(--danger);color:#fff;border:0}.btn.ok{background:var(--ok);color:#fff;border:0}.btn.warn{background:var(--warn);color:#111;border:0}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:14px}.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden}.card:after{content:"";position:absolute;inset:auto -30px -40px auto;width:110px;height:110px;border-radius:50%;background:rgba(255,106,0,.15)}.card .num{font-size:29px;font-weight:900;margin-top:8px}.muted{color:var(--muted)}
+.section{background:rgba(17,18,22,.76);border:1px solid var(--line);border-radius:24px;padding:18px;margin-top:16px;box-shadow:var(--shadow)}.light .section{background:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:800px}th,td{padding:12px;border-bottom:1px solid var(--line);text-align:start}th{color:var(--muted);font-size:13px}tr:hover td{background:rgba(255,106,0,.05)}
+.form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.field{display:flex;flex-direction:column;gap:6px}.field label{color:var(--muted);font-size:13px}input,select,textarea{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:13px;padding:11px;outline:none}textarea{min-height:80px}.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:20px;z-index:30}.modal-box{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:18px;max-width:820px;width:100%;max-height:88vh;overflow:auto;box-shadow:var(--shadow)}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.login-box{width:410px;background:rgba(17,18,22,.88);border:1px solid var(--line);border-radius:30px;padding:28px;box-shadow:var(--shadow);backdrop-filter:blur(14px)}.login-box h1{text-align:center;font-size:56px;margin:0;color:var(--brand);letter-spacing:2px}.login-box p{text-align:center;color:var(--muted)}
+.toast{position:fixed;bottom:18px;left:18px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 18px;box-shadow:var(--shadow);z-index:50}.badge{padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900}.badge.ok{background:rgba(34,197,94,.17);color:#22c55e}.badge.warn{background:rgba(245,158,11,.17);color:#f59e0b}.badge.danger{background:rgba(239,68,68,.17);color:#ef4444}.pos{display:grid;grid-template-columns:1.3fr .7fr;gap:14px}.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}.product-tile{background:var(--panel2);border:1px solid var(--line);border-radius:18px;padding:12px}.product-tile .emoji{font-size:34px}.cart-row{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding:9px 0}.print-area{background:#fff;color:#111;padding:15px;border-radius:12px}
+@media(max-width:1000px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.cards{grid-template-columns:repeat(2,1fr)}.form{grid-template-columns:1fr 1fr}.pos,.grid2{grid-template-columns:1fr}}
+@media(max-width:600px){.cards,.form,.grid3{grid-template-columns:1fr}.topbar{flex-direction:column;align-items:stretch}}
+@media print{body *{visibility:hidden}.printable,.printable *{visibility:visible}.printable{position:absolute;inset:0}}
+</style>
+</head>
+<body>
+<div id="loginScreen" class="login">
+  <div class="login-box">
+    <h1>JBL</h1><p data-i18n="loginSub">نظام المخزون والكاشير</p>
+    <div class="field"><label>Username</label><input id="loginUser" value="mahmoud"></div><br>
+    <div class="field"><label>Password</label><input id="loginPass" type="password" value="mahmoud@2005"></div><br>
+    <button class="btn primary" onclick="login()" data-i18n="login">دخول</button>
+    <p class="muted">ادخل اليوزر والباسورد المضافين من قسم الموظفين</p>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="logo"><div class="logo-badge">JBL</div><div><b>JBL ERP & POS</b><small id="userRoleText">Admin</small></div></div>
+    <div class="nav" id="nav"></div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div><h2 id="pageTitle">الرئيسية</h2><div class="muted" id="clock"></div></div>
+      <div class="top-actions">
+        <button class="btn" onclick="toggleLang()">AR / EN</button>
+        <button class="btn" onclick="toggleTheme()">🌙 / ☀️</button>
+        <button class="btn" onclick="backup()">نسخة احتياطية</button>
+        <button class="btn danger" onclick="logout()">خروج</button>
+      </div>
+    </div>
+    <div id="content"></div>
+  </main>
+</div>
+<div id="modal" class="modal hidden"></div>
+<div id="toast" class="toast hidden"></div>
+
+<script>
+const LOGIN_USER='mahmoud', LOGIN_PASS='mahmoud@2005';
+let lang=localStorage.getItem('jbl_lang')||'ar';
+let theme=localStorage.getItem('jbl_theme')||'dark';
+let currentUser=JSON.parse(localStorage.getItem('jbl_session')||'null');
+const T={
+ar:{dashboard:'الرئيسية',products:'المنتجات',bulk:'الأحجام الكبيرة',pos:'الكاشير',invoices:'الفواتير',customers:'العملاء',debts:'الديون',suppliers:'الموردون',branches:'الفروع',reports:'التقارير',returns:'المرتجعات',barcode:'الباركود',employees:'الموظفون',settings:'الإعدادات',login:'دخول',loginSub:'نظام المخزون والكاشير',role:'الصلاحية'},
+en:{dashboard:'Dashboard',products:'Products',bulk:'Bulk Sizes',pos:'POS',invoices:'Invoices',customers:'Customers',debts:'Debts',suppliers:'Suppliers',branches:'Branches',reports:'Reports',returns:'Returns',barcode:'Barcode',employees:'Employees',settings:'Settings',login:'Login',loginSub:'Inventory & POS System',role:'Role'}
+};
+const pages=[
+['dashboard','🏠'],['products','📦'],['bulk','📦'],['pos','🛒'],['invoices','🧾'],['returns','↩️'],['customers','👥'],['debts','💳'],['suppliers','🚚'],['branches','🏢'],['reports','📊'],['barcode','🏷️'],['employees','👨‍💼'],['settings','⚙️']
+];
+let db;
+function defaults(){return{
+products:[
+{id:uid(),name:'شبس ليز ملح',cat:'شبس',barcode:'625100100001',buy:0.22,sell:0.35,qty:240,branch:'الفرع الرئيسي',min:24,emoji:'🍟'},
+{id:uid(),name:'شبس دوريتوس حار',cat:'شبس',barcode:'625100100002',buy:0.35,sell:0.60,qty:144,branch:'الفرع الرئيسي',min:18,emoji:'🌶️'},
+{id:uid(),name:'عصير تفاح صغير',cat:'عصائر',barcode:'625100100003',buy:0.18,sell:0.35,qty:192,branch:'الفرع الرئيسي',min:24,emoji:'🧃'},
+{id:uid(),name:'بيبسي 250 مل',cat:'مشروبات',barcode:'625100100004',buy:0.24,sell:0.40,qty:120,branch:'الفرع الرئيسي',min:24,emoji:'🥤'},
+{id:uid(),name:'شوكولاتة جالكسي',cat:'شوكولاتة',barcode:'625100100005',buy:0.42,sell:0.75,qty:80,branch:'الفرع الرئيسي',min:12,emoji:'🍫'},
+{id:uid(),name:'نسكافيه 3in1',cat:'نسكافيه',barcode:'625100100006',buy:0.12,sell:0.25,qty:300,branch:'الفرع الرئيسي',min:30,emoji:'☕'},
+{id:uid(),name:'بسكويت دايجستف',cat:'بسكويت',barcode:'625100100007',buy:0.38,sell:0.65,qty:60,branch:'الفرع الرئيسي',min:12,emoji:'🍪'},
+{id:uid(),name:'مياه صغيرة',cat:'مياه',barcode:'625100100008',buy:0.10,sell:0.25,qty:240,branch:'الفرع الرئيسي',min:48,emoji:'💧'},
+{id:uid(),name:'كيك صغير شوكولاتة',cat:'كيك',barcode:'625100100009',buy:0.16,sell:0.30,qty:180,branch:'الفرع الرئيسي',min:24,emoji:'🧁'},
+{id:uid(),name:'علكة نعنع',cat:'سكاكر',barcode:'625100100010',buy:0.08,sell:0.15,qty:260,branch:'الفرع الرئيسي',min:30,emoji:'🍬'},
+{id:uid(),name:'مستر شيبس كاتشب',cat:'شبس',barcode:'625100100011',buy:0.20,sell:0.35,qty:220,branch:'الفرع الرئيسي',min:24,emoji:'🍟'},
+{id:uid(),name:'عصير برتقال',cat:'عصائر',barcode:'625100100012',buy:0.20,sell:0.40,qty:160,branch:'الفرع الرئيسي',min:24,emoji:'🍊'},
+{id:uid(),name:'شوكولاتة كيت كات',cat:'شوكولاتة',barcode:'625100100013',buy:0.32,sell:0.55,qty:110,branch:'الفرع الرئيسي',min:18,emoji:'🍫'},
+{id:uid(),name:'قهوة مثلجة',cat:'مشروبات',barcode:'625100100014',buy:0.55,sell:0.85,qty:75,branch:'الفرع الرئيسي',min:12,emoji:'🧋'},
+{id:uid(),name:'شيبس عمان ملح',cat:'شبس',barcode:'625100100015',buy:0.18,sell:0.30,qty:200,branch:'الفرع الرئيسي',min:24,emoji:'🍟'},
+{id:uid(),name:'شيبس عمان حار',cat:'شبس',barcode:'625100100016',buy:0.18,sell:0.30,qty:190,branch:'الفرع الرئيسي',min:24,emoji:'🌶️'},
+{id:uid(),name:'شيبس رفلز جبنة',cat:'شبس',barcode:'625100100017',buy:0.28,sell:0.50,qty:130,branch:'الفرع الرئيسي',min:18,emoji:'🧀'},
+{id:uid(),name:'شيبس برنجلز صغير',cat:'شبس',barcode:'625100100018',buy:0.72,sell:1.00,qty:60,branch:'الفرع الرئيسي',min:10,emoji:'🥔'},
+{id:uid(),name:'شيبس تاكيز حار',cat:'شبس',barcode:'625100100019',buy:0.55,sell:0.85,qty:75,branch:'الفرع الرئيسي',min:12,emoji:'🌮'},
+{id:uid(),name:'عصير مانجا',cat:'عصائر',barcode:'625100100020',buy:0.20,sell:0.40,qty:170,branch:'الفرع الرئيسي',min:24,emoji:'🥭'},
+{id:uid(),name:'عصير فراولة',cat:'عصائر',barcode:'625100100021',buy:0.20,sell:0.40,qty:155,branch:'الفرع الرئيسي',min:24,emoji:'🍓'},
+{id:uid(),name:'عصير كوكتيل',cat:'عصائر',barcode:'625100100022',buy:0.22,sell:0.45,qty:150,branch:'الفرع الرئيسي',min:24,emoji:'🧃'},
+{id:uid(),name:'عصير أناناس',cat:'عصائر',barcode:'625100100023',buy:0.22,sell:0.45,qty:140,branch:'الفرع الرئيسي',min:24,emoji:'🍍'},
+{id:uid(),name:'عصير رمان',cat:'عصائر',barcode:'625100100024',buy:0.25,sell:0.50,qty:120,branch:'الفرع الرئيسي',min:20,emoji:'🧃'},
+{id:uid(),name:'بيبسي 330 مل',cat:'مشروبات',barcode:'625100100025',buy:0.32,sell:0.55,qty:110,branch:'الفرع الرئيسي',min:24,emoji:'🥤'},
+{id:uid(),name:'ميرندا 330 مل',cat:'مشروبات',barcode:'625100100026',buy:0.32,sell:0.55,qty:105,branch:'الفرع الرئيسي',min:24,emoji:'🥤'},
+{id:uid(),name:'سفن أب 330 مل',cat:'مشروبات',barcode:'625100100027',buy:0.32,sell:0.55,qty:115,branch:'الفرع الرئيسي',min:24,emoji:'🥤'},
+{id:uid(),name:'مشروب طاقة صغير',cat:'مشروبات',barcode:'625100100028',buy:0.55,sell:0.90,qty:70,branch:'الفرع الرئيسي',min:12,emoji:'⚡'},
+{id:uid(),name:'شاي مثلج خوخ',cat:'مشروبات',barcode:'625100100029',buy:0.45,sell:0.75,qty:80,branch:'الفرع الرئيسي',min:12,emoji:'🧊'},
+{id:uid(),name:'جالكسي فلوتس',cat:'شوكولاتة',barcode:'625100100030',buy:0.30,sell:0.50,qty:100,branch:'الفرع الرئيسي',min:18,emoji:'🍫'},
+{id:uid(),name:'سنيكرز',cat:'شوكولاتة',barcode:'625100100031',buy:0.35,sell:0.60,qty:95,branch:'الفرع الرئيسي',min:18,emoji:'🍫'},
+{id:uid(),name:'مارس',cat:'شوكولاتة',barcode:'625100100032',buy:0.35,sell:0.60,qty:90,branch:'الفرع الرئيسي',min:18,emoji:'🍫'},
+{id:uid(),name:'تويكس',cat:'شوكولاتة',barcode:'625100100033',buy:0.35,sell:0.60,qty:92,branch:'الفرع الرئيسي',min:18,emoji:'🍫'},
+{id:uid(),name:'باونتي',cat:'شوكولاتة',barcode:'625100100034',buy:0.35,sell:0.60,qty:85,branch:'الفرع الرئيسي',min:18,emoji:'🥥'},
+{id:uid(),name:'نسكافيه كلاسيك ظرف',cat:'نسكافيه',barcode:'625100100035',buy:0.10,sell:0.20,qty:350,branch:'الفرع الرئيسي',min:40,emoji:'☕'},
+{id:uid(),name:'كابتشينو ظرف',cat:'نسكافيه',barcode:'625100100036',buy:0.18,sell:0.35,qty:230,branch:'الفرع الرئيسي',min:30,emoji:'☕'},
+{id:uid(),name:'هوت شوكليت ظرف',cat:'نسكافيه',barcode:'625100100037',buy:0.20,sell:0.40,qty:210,branch:'الفرع الرئيسي',min:30,emoji:'☕'},
+{id:uid(),name:'قهوة تركية صغيرة',cat:'نسكافيه',barcode:'625100100038',buy:0.60,sell:0.90,qty:65,branch:'الفرع الرئيسي',min:10,emoji:'☕'},
+{id:uid(),name:'مبيض قهوة صغير',cat:'نسكافيه',barcode:'625100100039',buy:0.75,sell:1.10,qty:55,branch:'الفرع الرئيسي',min:10,emoji:'🥛'},
+{id:uid(),name:'بسكويت أوريو',cat:'بسكويت',barcode:'625100100040',buy:0.32,sell:0.55,qty:120,branch:'الفرع الرئيسي',min:18,emoji:'🍪'},
+{id:uid(),name:'بسكويت لواكر',cat:'بسكويت',barcode:'625100100041',buy:0.45,sell:0.75,qty:80,branch:'الفرع الرئيسي',min:12,emoji:'🍪'},
+{id:uid(),name:'بسكويت شاي',cat:'بسكويت',barcode:'625100100042',buy:0.20,sell:0.35,qty:150,branch:'الفرع الرئيسي',min:24,emoji:'🍪'},
+{id:uid(),name:'بسكويت كاكاو',cat:'بسكويت',barcode:'625100100043',buy:0.22,sell:0.40,qty:135,branch:'الفرع الرئيسي',min:20,emoji:'🍪'},
+{id:uid(),name:'ويفر فانيلا',cat:'بسكويت',barcode:'625100100044',buy:0.15,sell:0.30,qty:180,branch:'الفرع الرئيسي',min:24,emoji:'🧇'},
+{id:uid(),name:'سكاكر مشكلة',cat:'سكاكر',barcode:'625100100045',buy:0.05,sell:0.10,qty:500,branch:'الفرع الرئيسي',min:50,emoji:'🍬'},
+{id:uid(),name:'مصاصة',cat:'سكاكر',barcode:'625100100046',buy:0.04,sell:0.10,qty:450,branch:'الفرع الرئيسي',min:50,emoji:'🍭'},
+{id:uid(),name:'جيلي كولا',cat:'سكاكر',barcode:'625100100047',buy:0.18,sell:0.35,qty:170,branch:'الفرع الرئيسي',min:24,emoji:'🍬'},
+{id:uid(),name:'مارشميلو صغير',cat:'سكاكر',barcode:'625100100048',buy:0.25,sell:0.45,qty:110,branch:'الفرع الرئيسي',min:18,emoji:'🍡'},
+{id:uid(),name:'حلقوم صغير',cat:'سكاكر',barcode:'625100100049',buy:0.30,sell:0.55,qty:90,branch:'الفرع الرئيسي',min:15,emoji:'🍬'},
+{id:uid(),name:'مياه كبيرة',cat:'مياه',barcode:'625100100050',buy:0.22,sell:0.40,qty:140,branch:'الفرع الرئيسي',min:24,emoji:'💧'},
+{id:uid(),name:'مياه وسط',cat:'مياه',barcode:'625100100051',buy:0.16,sell:0.30,qty:180,branch:'الفرع الرئيسي',min:30,emoji:'💧'},
+{id:uid(),name:'مياه غازية',cat:'مياه',barcode:'625100100052',buy:0.38,sell:0.65,qty:70,branch:'الفرع الرئيسي',min:12,emoji:'💧'},
+{id:uid(),name:'لبن عيران',cat:'ألبان',barcode:'625100100053',buy:0.28,sell:0.50,qty:100,branch:'الفرع الرئيسي',min:18,emoji:'🥛'},
+{id:uid(),name:'حليب شوكولاتة',cat:'ألبان',barcode:'625100100054',buy:0.32,sell:0.55,qty:95,branch:'الفرع الرئيسي',min:18,emoji:'🥛'},
+{id:uid(),name:'لبن رايب صغير',cat:'ألبان',barcode:'625100100055',buy:0.24,sell:0.45,qty:105,branch:'الفرع الرئيسي',min:18,emoji:'🥛'},
+{id:uid(),name:'كروسان شوكولاتة',cat:'معجنات',barcode:'625100100056',buy:0.22,sell:0.40,qty:130,branch:'الفرع الرئيسي',min:20,emoji:'🥐'},
+{id:uid(),name:'كروسان جبنة',cat:'معجنات',barcode:'625100100057',buy:0.22,sell:0.40,qty:125,branch:'الفرع الرئيسي',min:20,emoji:'🥐'},
+{id:uid(),name:'دونات صغير',cat:'معجنات',barcode:'625100100058',buy:0.30,sell:0.55,qty:85,branch:'الفرع الرئيسي',min:12,emoji:'🍩'},
+{id:uid(),name:'كيك فانيلا',cat:'كيك',barcode:'625100100059',buy:0.16,sell:0.30,qty:175,branch:'الفرع الرئيسي',min:24,emoji:'🧁'},
+{id:uid(),name:'كيك فراولة',cat:'كيك',barcode:'625100100060',buy:0.16,sell:0.30,qty:165,branch:'الفرع الرئيسي',min:24,emoji:'🧁'},
+{id:uid(),name:'اندومي دجاج',cat:'نودلز',barcode:'625100100061',buy:0.25,sell:0.45,qty:160,branch:'الفرع الرئيسي',min:24,emoji:'🍜'},
+{id:uid(),name:'اندومي خضار',cat:'نودلز',barcode:'625100100062',buy:0.25,sell:0.45,qty:155,branch:'الفرع الرئيسي',min:24,emoji:'🍜'},
+{id:uid(),name:'مكسرات مشكلة صغير',cat:'مكسرات',barcode:'625100100063',buy:0.50,sell:0.85,qty:75,branch:'الفرع الرئيسي',min:12,emoji:'🥜'},
+{id:uid(),name:'فستق صغير',cat:'مكسرات',barcode:'625100100064',buy:0.65,sell:1.00,qty:60,branch:'الفرع الرئيسي',min:10,emoji:'🥜'}
+],
+branches:[{id:uid(),name:'الفرع الرئيسي',manager:'محمود',phone:'0790000000'}],
+customers:[{id:uid(),name:'زبون نقدي',phone:'-',debt:0,balance:0},{id:uid(),name:'أحمد محمد',phone:'0791111111',debt:3.5,balance:25}],
+suppliers:[{id:uid(),name:'مورد المشروبات',phone:'0782222222'},{id:uid(),name:'مورد السناكات',phone:'0783333333'}],
+employees:[{id:uid(),name:'محمود',username:'mahmoud',password:'mahmoud@2005',job:'المالك / المدير',role:'admin',active:true}],
+invoices:[],returns:[],debts:[{id:uid(),customer:'أحمد محمد',amount:3.5,paid:1,remain:2.5,date:today(),note:'دين سابق'}],
+activities:[{date:now(),text:'تم إنشاء بيانات تجريبية للنظام'}],
+settings:{tax:0,storeName:'JBL Market',currency:'JOD'}, simulatedCustomers:0
+}}
+function uid(){return 'id'+Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
+function today(){return new Date().toISOString().slice(0,10)}function now(){return new Date().toLocaleString('ar-JO')}
+function load(){
+db=JSON.parse(localStorage.getItem('jbl_db')||'null')||defaults();
+if(db.simulatedCustomers===undefined)db.simulatedCustomers=0;
+if(!db.customers)db.customers=[];
+if(!db.employees)db.employees=[];
+if(!db.employees.some(e=>e.username==='mahmoud')) db.employees.unshift({id:uid(),name:'محمود',username:'mahmoud',password:'mahmoud@2005',job:'المالك / المدير',role:'admin',active:true});
+db.employees.forEach(e=>{if(e.active===undefined)e.active=true;if(!e.role)e.role='cashier';if(!e.job)e.job='موظف'});
+db.customers.forEach(c=>{if(c.balance===undefined)c.balance=0;if(c.debt===undefined)c.debt=0});
+const base=defaults().products;
+for(const p of base){if(!db.products.some(x=>x.barcode===p.barcode))db.products.push(p)}
+generateBulkProducts();
+addExtraProducts2026();
+save()
+}
+function save(){localStorage.setItem('jbl_db',JSON.stringify(db))}
+function money(n){return Number(n||0).toFixed(2)+' JOD'}
+function tr(k){return T[lang][k]||k}
+function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),2300)}
+function login(){
+  load();
+  let u=loginUser.value.trim(),p=loginPass.value;
+  let emp=db.employees.find(e=>e.username===u && e.password===p && e.active!==false);
+  if(!emp && u===LOGIN_USER && p===LOGIN_PASS){emp={name:'محمود',username:u,job:'المالك / المدير',role:'admin',active:true}}
+  if(emp){currentUser={id:emp.id,name:emp.name,username:emp.username,job:emp.job,role:emp.role};localStorage.setItem('jbl_session',JSON.stringify(currentUser));start()}else toast('بيانات الدخول غلط أو الموظف موقوف')
+}
+function logout(){localStorage.removeItem('jbl_session');location.reload()}
+function start(){load();document.body.classList.toggle('light',theme==='light');loginScreen.classList.add('hidden');app.classList.remove('hidden');renderNav();go('dashboard');tick();setInterval(tick,1000);setInterval(simulateCustomers,60000);userRoleText.textContent=(currentUser.name||currentUser.username)+' - '+(currentUser.job||currentUser.role)}
+function renderNav(){nav.innerHTML=pages.map(p=>`<button id="nav_${p[0]}" onclick="go('${p[0]}')">${p[1]} <span>${tr(p[0])}</span></button>`).join('')}
+function go(page){document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));let n=document.getElementById('nav_'+page);if(n)n.classList.add('active');pageTitle.textContent=tr(page);window['render_'+page]()}
+function tick(){clock.textContent=new Date().toLocaleString(lang==='ar'?'ar-JO':'en-US')}
+function toggleTheme(){theme=theme==='dark'?'light':'dark';localStorage.setItem('jbl_theme',theme);document.body.classList.toggle('light',theme==='light')}
+function toggleLang(){lang=lang==='ar'?'en':'ar';localStorage.setItem('jbl_lang',lang);document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';renderNav();go(document.querySelector('.nav button.active')?.id.replace('nav_','')||'dashboard')}
+function can(action){
+ if(currentUser.role==='admin')return true;
+ if(currentUser.role==='assistant')return ['pos','invoice','return','products','customers','debts','suppliers','branches','reports','barcode'].includes(action);
+ if(currentUser.role==='cashier')return ['pos','invoice','return'].includes(action);
+ return false
+}
+function deny(){toast('لا تملك صلاحية لهذه العملية')}
+function stat(){let stockValue=db.products.reduce((s,p)=>s+p.buy*p.qty,0),debt=db.debts.reduce((s,d)=>s+d.remain,0),sales=db.invoices.reduce((s,i)=>s+i.total,0),profit=db.invoices.reduce((s,i)=>s+i.profit,0);return{stockValue,debt,sales,profit}}
+function simulateCustomers(){
+  db.simulatedCustomers=(db.simulatedCustomers||0)+20;
+  const names=['محمد','أحمد','عمر','خالد','سارة','لين','نور','يزن','لانا','رامي'];
+  for(let i=0;i<20;i++){
+    const p=db.products[Math.floor(Math.random()*db.products.length)];
+    if(!p||p.qty<=0) continue;
+    const qty=Math.min(p.qty,Math.floor(Math.random()*2)+1);
+    // المنتجات لا تنقص أبداً حسب طلبك
+    const total=p.sell*qty, profit=(p.sell-p.buy)*qty;
+    db.invoices.push({id:uid(),no:db.invoices.length+1,date:now(),items:[{id:p.id,name:p.name,price:p.sell,buy:p.buy,qty}],total,profit,customer:names[Math.floor(Math.random()*names.length)]+' تلقائي',type:'cash',auto:true});
+  }
+  db.activities.push({date:now(),text:'دخول 20 زبون تلقائي وتسجيل مبيعات عشوائية'});
+  save();
+  if(!document.getElementById('app').classList.contains('hidden')){
+    let active=document.querySelector('.nav button.active')?.id.replace('nav_','')||'dashboard';
+    if(['dashboard','products','invoices','reports'].includes(active)) go(active);
+  }
+}
+
+
+function isBulkProduct(p){return p && (p.bulk===true || String(p.cat||'').includes('كراتين') || String(p.name||'').startsWith('كرتون '))}
+function generateBulkProducts(){
+  if(!db.products) return;
+  const originals=[...db.products].filter(p=>!isBulkProduct(p));
+  originals.forEach((p,idx)=>{
+    const bulkBarcode='9'+String(p.barcode||idx).replace(/\D/g,'').slice(0,11).padStart(11,'0');
+    if(!db.products.some(x=>x.barcode===bulkBarcode || x.parentBarcode===p.barcode)){
+      db.products.push({
+        id:uid(),
+        name:'كرتون '+p.name,
+        cat:'كراتين / أحجام كبيرة',
+        barcode:bulkBarcode,
+        parentBarcode:p.barcode,
+        bulk:true,
+        unitsPerCarton:4,
+        buy:Number((p.buy*4).toFixed(2)),
+        sell:Number((p.sell*4).toFixed(2)),
+        qty:Math.max(5,Math.floor((p.qty||0)/4)),
+        branch:p.branch,
+        min:Math.max(2,Math.floor((p.min||4)/4)),
+        emoji:'📦'
+      });
+    }
+  });
+}
+function render_bulk(){
+  generateBulkProducts();save();
+  content.innerHTML=`<div class="section">
+    <h3>📦 الأحجام الكبيرة / الكراتين</h3>
+    <p class="muted">نفس المنتجات الموجودة لكن كراتين — سعر الكرتون = سعر القطعة × 4</p>
+    <input id="searchBulk" oninput="drawBulk()" placeholder="بحث عن كرتون أو باركود">
+  </div>
+  <div class="section"><div class="products-grid" id="bulkGrid"></div></div>`;
+  drawBulk();
+}
+function drawBulk(){
+  const q=(document.getElementById('searchBulk')?.value||'').toLowerCase();
+  const bulk=db.products.filter(isBulkProduct).filter(p=>(p.name+p.barcode+p.cat).toLowerCase().includes(q));
+  bulkGrid.innerHTML=bulk.map(p=>`
+  <div class="product-tile">
+    <div class="emoji">📦</div>
+    <b>${p.name}</b><br>
+    <span class="muted">باركود: ${p.barcode}</span><br>
+    <span class="muted">يحتوي ${p.unitsPerCarton||4} قطع</span><br>
+    <h3 style="color:var(--ok);margin:8px 0">${money(p.sell)}</h3>
+    <small>المتوفر ${p.qty} كرتون</small><br><br>
+    <button class="btn primary" onclick="addCart('${p.id}')">إضافة للكاشير</button>
+  </div>`).join('');
+}
+
+
+function addExtraProducts2026(){
+  const extraProducts2026=[
+{id:uid(),name:'كرتون أوريو عائلي',cat:'كراتين / أحجام كبيرة',barcode:'925100100101',buy:1.6,sell:2.2,qty:35,branch:'الفرع الرئيسي',min:5,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون كيت كات',cat:'كراتين / أحجام كبيرة',barcode:'925100100102',buy:2.2,sell:3.0,qty:28,branch:'الفرع الرئيسي',min:5,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون سنيكرز',cat:'كراتين / أحجام كبيرة',barcode:'925100100103',buy:2.4,sell:3.2,qty:25,branch:'الفرع الرئيسي',min:5,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون تويكس',cat:'كراتين / أحجام كبيرة',barcode:'925100100104',buy:2.4,sell:3.2,qty:25,branch:'الفرع الرئيسي',min:5,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون كابري صن',cat:'كراتين / أحجام كبيرة',barcode:'925100100105',buy:1.6,sell:2.4,qty:40,branch:'الفرع الرئيسي',min:6,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون راني',cat:'كراتين / أحجام كبيرة',barcode:'925100100106',buy:1.8,sell:2.6,qty:38,branch:'الفرع الرئيسي',min:6,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون سفن أب',cat:'كراتين / أحجام كبيرة',barcode:'925100100107',buy:1.3,sell:2.0,qty:45,branch:'الفرع الرئيسي',min:8,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون كوكاكولا',cat:'كراتين / أحجام كبيرة',barcode:'925100100108',buy:1.3,sell:2.0,qty:45,branch:'الفرع الرئيسي',min:8,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون بيبسي',cat:'كراتين / أحجام كبيرة',barcode:'925100100109',buy:1.3,sell:2.0,qty:45,branch:'الفرع الرئيسي',min:8,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون مياه أكوافينا',cat:'كراتين / أحجام كبيرة',barcode:'925100100110',buy:0.8,sell:1.6,qty:60,branch:'الفرع الرئيسي',min:10,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون ليز بطاطا',cat:'كراتين / أحجام كبيرة',barcode:'925100100111',buy:1.4,sell:2.0,qty:52,branch:'الفرع الرئيسي',min:8,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون دوريتوس',cat:'كراتين / أحجام كبيرة',barcode:'925100100112',buy:2.4,sell:3.6,qty:32,branch:'الفرع الرئيسي',min:5,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون شيتوس',cat:'كراتين / أحجام كبيرة',barcode:'925100100113',buy:1.4,sell:2.0,qty:42,branch:'الفرع الرئيسي',min:8,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون تاكيز',cat:'كراتين / أحجام كبيرة',barcode:'925100100114',buy:3.4,sell:4.8,qty:20,branch:'الفرع الرئيسي',min:4,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون نسكافيه 3in1',cat:'كراتين / أحجام كبيرة',barcode:'925100100115',buy:1.0,sell:1.6,qty:70,branch:'الفرع الرئيسي',min:12,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون كابتشينو',cat:'كراتين / أحجام كبيرة',barcode:'925100100116',buy:1.4,sell:2.2,qty:55,branch:'الفرع الرئيسي',min:10,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون هوت شوكليت',cat:'كراتين / أحجام كبيرة',barcode:'925100100117',buy:1.6,sell:2.4,qty:50,branch:'الفرع الرئيسي',min:10,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون بسكويت شاي',cat:'كراتين / أحجام كبيرة',barcode:'925100100118',buy:1.4,sell:2.0,qty:48,branch:'الفرع الرئيسي',min:8,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون ويفر فانيلا',cat:'كراتين / أحجام كبيرة',barcode:'925100100119',buy:1.2,sell:1.8,qty:50,branch:'الفرع الرئيسي',min:8,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون اندومي دجاج',cat:'كراتين / أحجام كبيرة',barcode:'925100100120',buy:1.8,sell:2.8,qty:44,branch:'الفرع الرئيسي',min:8,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'تايد مسحوق صغير',cat:'منظفات',barcode:'625100100201',buy:0.9,sell:1.5,qty:75,branch:'الفرع الرئيسي',min:12,emoji:'🧼',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'أريال مسحوق صغير',cat:'منظفات',barcode:'625100100202',buy:1.1,sell:1.75,qty:70,branch:'الفرع الرئيسي',min:12,emoji:'🧼',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'كلوركس صغير',cat:'منظفات',barcode:'625100100203',buy:0.55,sell:0.9,qty:80,branch:'الفرع الرئيسي',min:12,emoji:'🧴',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'فيري جلي صغير',cat:'منظفات',barcode:'625100100204',buy:0.8,sell:1.25,qty:60,branch:'الفرع الرئيسي',min:10,emoji:'🧽',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'فاين مناديل',cat:'منظفات',barcode:'625100100205',buy:0.45,sell:0.75,qty:120,branch:'الفرع الرئيسي',min:18,emoji:'🧻',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'كرتون تايد مسحوق',cat:'كراتين / أحجام كبيرة',barcode:'925100100201',buy:3.6,sell:6.0,qty:24,branch:'الفرع الرئيسي',min:4,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون أريال مسحوق',cat:'كراتين / أحجام كبيرة',barcode:'925100100202',buy:4.4,sell:7.0,qty:22,branch:'الفرع الرئيسي',min:4,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون كلوركس',cat:'كراتين / أحجام كبيرة',barcode:'925100100203',buy:2.2,sell:3.6,qty:28,branch:'الفرع الرئيسي',min:5,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون فيري جلي',cat:'كراتين / أحجام كبيرة',barcode:'925100100204',buy:3.2,sell:5.0,qty:25,branch:'الفرع الرئيسي',min:5,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون فاين مناديل',cat:'كراتين / أحجام كبيرة',barcode:'925100100205',buy:1.8,sell:3.0,qty:35,branch:'الفرع الرئيسي',min:6,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'لبنة صغيرة',cat:'ألبان',barcode:'625100100206',buy:0.65,sell:1.0,qty:70,branch:'الفرع الرئيسي',min:10,emoji:'🥛',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'جبنة مثلثات',cat:'ألبان',barcode:'625100100207',buy:0.75,sell:1.2,qty:60,branch:'الفرع الرئيسي',min:10,emoji:'🧀',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'زبادي صغير',cat:'ألبان',barcode:'625100100208',buy:0.18,sell:0.3,qty:110,branch:'الفرع الرئيسي',min:20,emoji:'🥛',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'كرتون لبنة صغيرة',cat:'كراتين / أحجام كبيرة',barcode:'925100100206',buy:2.6,sell:4.0,qty:24,branch:'الفرع الرئيسي',min:5,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون جبنة مثلثات',cat:'كراتين / أحجام كبيرة',barcode:'925100100207',buy:3.0,sell:4.8,qty:22,branch:'الفرع الرئيسي',min:5,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون زبادي صغير',cat:'كراتين / أحجام كبيرة',barcode:'925100100208',buy:0.72,sell:1.2,qty:35,branch:'الفرع الرئيسي',min:6,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'تونة صغيرة',cat:'معلبات',barcode:'625100100209',buy:0.7,sell:1.1,qty:65,branch:'الفرع الرئيسي',min:10,emoji:'🥫',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'فول معلب',cat:'معلبات',barcode:'625100100210',buy:0.4,sell:0.65,qty:90,branch:'الفرع الرئيسي',min:15,emoji:'🥫',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'حمص معلب',cat:'معلبات',barcode:'625100100211',buy:0.45,sell:0.7,qty:85,branch:'الفرع الرئيسي',min:15,emoji:'🥫',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'كرتون تونة صغيرة',cat:'كراتين / أحجام كبيرة',barcode:'925100100209',buy:2.8,sell:4.4,qty:20,branch:'الفرع الرئيسي',min:4,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون فول معلب',cat:'كراتين / أحجام كبيرة',barcode:'925100100210',buy:1.6,sell:2.6,qty:30,branch:'الفرع الرئيسي',min:5,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون حمص معلب',cat:'كراتين / أحجام كبيرة',barcode:'925100100211',buy:1.8,sell:2.8,qty:30,branch:'الفرع الرئيسي',min:5,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'بطاريات AA',cat:'إكسسوارات',barcode:'625100100212',buy:0.55,sell:0.9,qty:60,branch:'الفرع الرئيسي',min:10,emoji:'🔋',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'ولاعة صغيرة',cat:'إكسسوارات',barcode:'625100100213',buy:0.15,sell:0.3,qty:100,branch:'الفرع الرئيسي',min:20,emoji:'🔥',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'أكياس قمامة صغيرة',cat:'منظفات',barcode:'625100100214',buy:0.5,sell:0.85,qty:75,branch:'الفرع الرئيسي',min:12,emoji:'🛍️',bulk:false,unitsPerCarton:undefined},
+{id:uid(),name:'كرتون بطاريات AA',cat:'كراتين / أحجام كبيرة',barcode:'925100100212',buy:2.2,sell:3.6,qty:20,branch:'الفرع الرئيسي',min:4,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون ولاعة صغيرة',cat:'كراتين / أحجام كبيرة',barcode:'925100100213',buy:0.6,sell:1.2,qty:40,branch:'الفرع الرئيسي',min:8,emoji:'📦',bulk:true,unitsPerCarton:4},
+{id:uid(),name:'كرتون أكياس قمامة',cat:'كراتين / أحجام كبيرة',barcode:'925100100214',buy:2.0,sell:3.4,qty:24,branch:'الفرع الرئيسي',min:4,emoji:'📦',bulk:true,unitsPerCarton:4}
+  ];
+  extraProducts2026.forEach(p=>{
+    if(!db.products.some(x=>x.barcode===p.barcode)){
+      db.products.push(p);
+    }
+  });
+}
+
+function render_dashboard(){let s=stat();content.innerHTML=`<div class="cards">
+<div class="card"><span class="muted">إجمالي المنتجات</span><div class="num">${db.products.length}</div></div>
+<div class="card"><span class="muted">قيمة المخزون</span><div class="num">${money(s.stockValue)}</div></div>
+<div class="card"><span class="muted">مبيعات النظام</span><div class="num">${money(s.sales)}</div></div>
+<div class="card"><span class="muted">إجمالي الديون</span><div class="num">${money(s.debt)}</div></div>
+<div class="card"><span class="muted">زبائن تلقائيين اليوم</span><div class="num">${db.simulatedCustomers||0}</div></div>
+</div><div class="grid2"><div class="section"><h3>أحدث العمليات</h3>${db.activities.slice(-8).reverse().map(a=>`<p>🟧 ${a.date} - ${a.text}</p>`).join('')}</div><div class="section"><h3>حركة الزبائن</h3><p>🔥 النظام يضيف 20 زبون تلقائياً كل دقيقة</p><p>آخر تحديث: ${now()}</p><button class="btn primary" onclick="simulateCustomers()">إضافة 20 زبون الآن</button></div></div><div class="section"><h3>منتجات قليلة</h3>${db.products.filter(p=>p.qty<=p.min).map(p=>`<p>⚠️ ${p.name} - ${p.qty}</p>`).join('')||'لا يوجد'}</div>`}
+function render_products(){content.innerHTML=`<div class="section"><h3>إضافة منتج</h3><div class="form">
+<input id="pn" placeholder="اسم المنتج"><input id="pc" placeholder="التصنيف"><input id="pb" placeholder="الباركود">
+<input id="pe" placeholder="رمز/إيموجي" value="📦"><input id="pbuy" type="number" step=".01" placeholder="سعر الشراء"><input id="psell" type="number" step=".01" placeholder="سعر البيع"><input id="pqty" type="number" placeholder="الكمية"><input id="pmin" type="number" placeholder="حد التنبيه"><select id="pbr">${db.branches.map(b=>`<option>${b.name}</option>`).join('')}</select>
+<button class="btn primary" onclick="addProduct()">إضافة</button></div></div><div class="section"><input id="searchP" oninput="drawProducts()" placeholder="بحث بالاسم أو الباركود"><br><br><div class="table-wrap"><table><thead><tr><th>المنتج</th><th>التصنيف</th><th>باركود</th><th>شراء</th><th>بيع</th><th>كمية</th><th>فرع</th><th>حالة</th><th>إجراء</th></tr></thead><tbody id="productsRows"></tbody></table></div></div>`;drawProducts()}
+function drawProducts(){let q=(searchP?.value||'').toLowerCase();productsRows.innerHTML=db.products.filter(p=>(p.name+p.barcode+p.cat).toLowerCase().includes(q)).map(p=>`<tr><td>${p.emoji} ${p.name}</td><td>${p.cat}</td><td>${p.barcode}</td><td>${money(p.buy)}</td><td>${money(p.sell)}</td><td>${p.qty}</td><td>${p.branch}</td><td><span class="badge ${p.qty<=p.min?'danger':'ok'}">${p.qty<=p.min?'ناقص':'متوفر'}</span></td><td><button class="btn" onclick="editProduct('${p.id}')">تعديل</button> <button class="btn danger" onclick="delProduct('${p.id}')">حذف</button></td></tr>`).join('')}
+function addProduct(){if(!can('admin'))return deny();db.products.push({id:uid(),name:pn.value,cat:pc.value,barcode:pb.value||Date.now(),emoji:pe.value||'📦',buy:+pbuy.value||0,sell:+psell.value||0,qty:+pqty.value||0,min:+pmin.value||5,branch:pbr.value});db.activities.push({date:now(),text:'إضافة منتج '+pn.value});save();render_products();toast('تمت إضافة المنتج')}
+function delProduct(id){if(!can('admin'))return deny();db.products=db.products.filter(p=>p.id!==id);save();render_products()}
+function editProduct(id){if(!can('admin'))return deny();let p=db.products.find(x=>x.id===id);modal.innerHTML=`<div class="modal-box"><h3>تعديل ${p.name}</h3><div class="form"><input id="epn" value="${p.name}"><input id="epc" value="${p.cat}"><input id="epb" value="${p.barcode}"><input id="epbuy" type="number" value="${p.buy}"><input id="epsell" type="number" value="${p.sell}"><input id="epqty" type="number" value="${p.qty}"><input id="epmin" type="number" value="${p.min}"></div><br><button class="btn primary" onclick="saveEditProduct('${id}')">حفظ</button> <button class="btn" onclick="closeModal()">إغلاق</button></div>`;modal.classList.remove('hidden')}
+function saveEditProduct(id){let p=db.products.find(x=>x.id===id);Object.assign(p,{name:epn.value,cat:epc.value,barcode:epb.value,buy:+epbuy.value,sell:+epsell.value,qty:+epqty.value,min:+epmin.value});save();closeModal();render_products();toast('تم التعديل')}
+function closeModal(){modal.classList.add('hidden');modal.innerHTML=''}
+let cart=[];
+function render_pos(){content.innerHTML=`<div class="pos">
+<div class="section">
+  <input id="posSearch" oninput="drawPosProducts()" placeholder="بحث أو مسح باركود">
+  <br><br>
+  <div class="products-grid" id="posProducts"></div>
+</div>
+<div class="section">
+  <h3>السلة</h3>
+  <div id="cartRows"></div>
+  <hr>
+  <div class="grid2">
+    <select id="payType"><option value="cash">نقدي</option><option value="balance">من الرصيد</option><option value="debt">دين</option></select>
+    <div>
+<select id="cartCustomer" onchange="document.getElementById('customerName').value=this.value">${db.customers.map(c=>`<option>${c.name}</option>`).join('')}</select>
+<input id="customerName" placeholder="اكتب اسم العميل" value="${db.customers[0]?.name||'زبون نقدي'}" style="margin-top:8px">
+</div>
+  </div>
+  <br>
+  <div class="grid2">
+    <input id="discountValue" type="number" step=".01" value="0" oninput="drawCart()" placeholder="قيمة الخصم">
+    <select id="discountType" onchange="drawCart()"><option value="amount">خصم مبلغ</option><option value="percent">خصم نسبة %</option></select>
+  </div>
+  <br>
+  <input id="paid" type="number" step=".01" placeholder="المدفوع">
+  <div class="section" style="margin-top:12px">
+    <p class="muted">المجموع قبل الخصم: <b id="cartSubTotal">0 JOD</b></p>
+    <p class="muted">الخصم: <b id="cartDiscount">0 JOD</b></p>
+    <h2>الإجمالي: <span id="cartTotal">0 JOD</span></h2>
+  </div>
+  <button class="btn primary" onclick="checkout()">إصدار فاتورة</button>
+</div>
+</div>`;drawPosProducts();drawCart()}
+function drawPosProducts(){let q=(posSearch?.value||'').toLowerCase();posProducts.innerHTML=db.products.filter(p=>(p.name+p.barcode).toLowerCase().includes(q)).map(p=>`<div class="product-tile" onclick="addCart('${p.id}')"><div class="emoji">${p.emoji}</div><b>${p.name}</b><br><span class="muted">${money(p.sell)}</span><br><small>متوفر دائماً</small></div>`).join('')}
+function addCart(id){
+let p=db.products.find(x=>x.id===id);
+if(!p)return toast('المنتج غير موجود');
+let q=+(prompt('كم العدد المطلوب؟', '1')||1);
+q=Math.floor(q);
+if(q<=0)return;
+let c=cart.find(x=>x.id===id);
+if(c){c.qty+=q}else cart.push({id:p.id,name:p.name,price:p.sell,buy:p.buy,qty:q});
+drawCart()
+}
+function setCartQty(id,qty){
+qty=Math.floor(+qty||1);
+let item=cart.find(x=>x.id===id);
+if(!item)return;
+if(qty<1)qty=1;
+item.qty=qty;
+drawCart();
+}
+function changeCartQty(id,delta){
+let item=cart.find(x=>x.id===id);
+if(!item)return;
+setCartQty(id,item.qty+delta);
+}
+function getCartTotals(){
+let sub=cart.reduce((s,i)=>s+i.price*i.qty,0);
+let dv=+(document.getElementById('discountValue')?.value||0);
+let dt=document.getElementById('discountType')?.value||'amount';
+let discount=dt==='percent'?sub*(dv/100):dv;
+if(discount<0)discount=0;
+if(discount>sub)discount=sub;
+let total=sub-discount;
+return{sub,discount,total};
+}
+function drawCart(){
+let totals=getCartTotals();
+if(cartRows)cartRows.innerHTML=cart.map(i=>`
+<div class="cart-row">
+  <div><b>${i.name}</b><br><span class="muted">${money(i.price)} للقطعة</span></div>
+  <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+    <button class="btn" onclick="changeCartQty('${i.id}',-1)">−</button>
+    <input style="width:70px;text-align:center" type="number" min="1" value="${i.qty}" onchange="setCartQty('${i.id}',this.value)">
+    <button class="btn" onclick="changeCartQty('${i.id}',1)">+</button>
+    <b>${money(i.price*i.qty)}</b>
+    <button class="btn danger" onclick="cart=cart.filter(x=>x.id!=='${i.id}');drawCart()">✕</button>
+  </div>
+</div>`).join('')||'<p class="muted">السلة فارغة</p>';
+if(document.getElementById('cartSubTotal'))cartSubTotal.textContent=money(totals.sub);
+if(document.getElementById('cartDiscount'))cartDiscount.textContent=money(totals.discount);
+if(document.getElementById('cartTotal'))cartTotal.textContent=money(totals.total);
+}
+function checkout(){
+if(!can('pos'))return deny();
+if(!cart.length)return toast('السلة فارغة');
+let totals=getCartTotals();
+let subTotal=totals.sub, discount=totals.discount, total=totals.total;
+let profit=cart.reduce((s,i)=>(s+(i.price-i.buy)*i.qty),0)-discount;
+let selectedCustomerName=(document.getElementById('customerName')?.value||document.getElementById('cartCustomer')?.value||'زبون نقدي').trim();
+let customer=db.customers.find(c=>c.name===selectedCustomerName);
+if(payType.value==='balance'){
+  if(!customer)return toast('لازم تختار أو تضيف عميل عنده رصيد');
+  if((+customer.balance||0)<total)return toast('رصيد العميل غير كافي');
+  customer.balance=(+customer.balance||0)-total;
+}
+// المنتجات لا تنقص أبداً حسب طلبك
+let inv={id:uid(),no:db.invoices.length+1,date:now(),items:[...cart],subTotal,discount,total,profit,customer:selectedCustomerName,type:payType.value};
+db.invoices.push(inv);
+if(payType.value==='debt'){
+  let paidAmt=+paid.value||0;
+  db.debts.push({id:uid(),customer:selectedCustomerName,amount:total,paid:paidAmt,remain:total-paidAmt,date:today(),note:'فاتورة رقم '+inv.no});
+  if(customer)customer.debt=(+customer.debt||0)+(total-paidAmt);
+}
+db.activities.push({date:now(),text:'إصدار فاتورة رقم '+inv.no+(discount>0?' مع خصم '+money(discount):'')+(payType.value==='balance'?' وخصمها من رصيد العميل':'')});
+cart=[];save();render_pos();printInvoice(inv);toast('تم إصدار الفاتورة')
+}
+function printInvoice(inv){modal.innerHTML=`<div class="modal-box printable"><div class="print-area"><h2>JBL Market</h2><p>فاتورة رقم ${inv.no}</p><p>${inv.date}</p><p>طريقة الدفع: ${inv.type==='balance'?'من الرصيد':inv.type==='debt'?'دين':'نقدي'}</p><hr>${inv.items.map(i=>`<p>${i.name} × ${i.qty} = ${money(i.qty*i.price)}</p>`).join('')}<hr><p>المجموع قبل الخصم: ${money(inv.subTotal||inv.total)}</p><p>الخصم: ${money(inv.discount||0)}</p><h3>الإجمالي ${money(inv.total)}</h3></div><br><button class="btn primary" onclick="window.print()">طباعة</button> <button class="btn" onclick="closeModal()">إغلاق</button></div>`;modal.classList.remove('hidden')}
+function render_invoices(){content.innerHTML=`<div class="section"><div class="table-wrap"><table><thead><tr><th>رقم</th><th>تاريخ</th><th>زبون</th><th>طريقة</th><th>الإجمالي</th><th>إجراء</th></tr></thead><tbody>${db.invoices.map(i=>`<tr><td>${i.no}</td><td>${i.date}</td><td>${i.customer}</td><td>${i.type}</td><td>${money(i.total)}</td><td><button class="btn" onclick='printInvoice(${JSON.stringify(i)})'>عرض/طباعة</button></td></tr>`).join('')}</tbody></table></div></div>`}
+function simpleCrud(title,key,fields){content.innerHTML=`<div class="section"><h3>${title}</h3><div class="form">${fields.map(f=>`<input id="f_${f}" placeholder="${f}">`).join('')}<button class="btn primary" onclick="addSimple('${key}','${fields.join(',')}')">إضافة</button></div></div><div class="section"><table><tbody>${db[key].map(x=>`<tr>${fields.map(f=>`<td>${x[f]||''}</td>`).join('')}<td><button class="btn danger" onclick="delSimple('${key}','${x.id}')">حذف</button></td></tr>`).join('')}</tbody></table></div>`}
+function addSimple(key,fs){if(!can('admin'))return deny();let o={id:uid()};fs.split(',').forEach(f=>o[f]=document.getElementById('f_'+f).value);db[key].push(o);save();window['render_'+key]()}
+function delSimple(key,id){
+  if(!can('admin')) return deny();
+
+  if(key === 'customers'){
+    let customer = db.customers.find(x => x.id === id);
+    if(customer){
+      db.debts = db.debts.filter(d => d.customer !== customer.name);
+      db.invoices = db.invoices.map(inv => inv.customer === customer.name ? {...inv, customer: 'عميل محذوف'} : inv);
+      db.activities.push({date:now(),text:'حذف العميل '+customer.name+' وحذف كل ديونه'});
+    }
+  }
+
+  db[key] = db[key].filter(x => x.id !== id);
+  save();
+
+  if(key === 'customers'){
+    render_customers();
+    toast('تم حذف العميل وكل ديونه');
+    return;
+  }
+
+  window['render_'+key]();
+}
+function render_customers(){
+content.innerHTML=`<div class="section"><h3>العملاء والرصيد</h3>
+<div class="form">
+<input id="cn" placeholder="اسم العميل"><input id="cp" placeholder="رقم الهاتف"><input id="cb" type="number" step=".01" placeholder="رصيد افتتاحي">
+<button class="btn primary" onclick="addCustomer()">إضافة عميل</button>
+</div></div>
+<div class="section"><div class="table-wrap"><table><thead><tr><th>الاسم</th><th>الهاتف</th><th>الرصيد</th><th>الدين</th><th>إجراء</th></tr></thead><tbody>
+${db.customers.map(c=>`<tr><td>${c.name}</td><td>${c.phone||''}</td><td><span class="badge ok">${money(c.balance||0)}</span></td><td>${money(c.debt||0)}</td><td><button class="btn ok" onclick="chargeBalance('${c.id}')">شحن رصيد</button> <button class="btn danger" onclick="delSimple('customers','${c.id}');render_customers()">حذف</button></td></tr>`).join('')}
+</tbody></table></div></div>`
+}
+function addCustomer(){if(!can('admin'))return deny();db.customers.push({id:uid(),name:cn.value,phone:cp.value,debt:0,balance:+cb.value||0});db.activities.push({date:now(),text:'إضافة عميل '+cn.value});save();render_customers();toast('تمت إضافة العميل')}
+function chargeBalance(id){if(!can('admin'))return deny();let c=db.customers.find(x=>x.id===id);let v=+(prompt('كم بدك تضيف رصيد للعميل؟')||0);if(v<=0)return;c.balance=(+c.balance||0)+v;db.activities.push({date:now(),text:'شحن رصيد '+money(v)+' للعميل '+c.name});save();render_customers();toast('تم شحن الرصيد')}
+function render_suppliers(){simpleCrud('الموردين','suppliers',['name','phone'])}
+function render_branches(){simpleCrud('الفروع','branches',['name','manager','phone'])}
+function render_debts(){content.innerHTML=`<div class="section"><h3>الديون</h3><div class="table-wrap"><table><thead><tr><th>العميل</th><th>الدين</th><th>مدفوع</th><th>متبقي</th><th>التاريخ</th><th>دفع</th></tr></thead><tbody>${db.debts.map(d=>`<tr><td>${d.customer}</td><td>${money(d.amount)}</td><td>${money(d.paid)}</td><td>${money(d.remain)}</td><td>${d.date}</td><td><button class="btn ok" onclick="payDebt('${d.id}')">تسديد</button></td></tr>`).join('')}</tbody></table></div></div>`}
+function payDebt(id){let d=db.debts.find(x=>x.id===id),v=prompt('كم المبلغ؟');v=+v||0;d.paid+=v;d.remain=Math.max(0,d.remain-v);save();render_debts()}
+function render_returns(){content.innerHTML=`<div class="section"><h3>مرتجع فاتورة</h3><input id="retNo" placeholder="رقم الفاتورة"><button class="btn warn" onclick="doReturn()">تنفيذ مرتجع كامل</button></div><div class="section">${db.returns.map(r=>`<p>↩️ فاتورة ${r.no} - ${money(r.total)} - ${r.date}</p>`).join('')||'لا يوجد مرتجعات'}</div>`}
+function doReturn(){if(!can('return'))return deny();let inv=db.invoices.find(i=>i.no==retNo.value);if(!inv)return toast('الفاتورة غير موجودة');db.returns.push({id:uid(),no:inv.no,total:inv.total,date:now()});db.activities.push({date:now(),text:'مرتجع فاتورة رقم '+inv.no});save();render_returns();toast('تم المرتجع')}
+function render_reports(){let s=stat();content.innerHTML=`<div class="cards"><div class="card"><span class="muted">المبيعات</span><div class="num">${money(s.sales)}</div></div><div class="card"><span class="muted">الأرباح</span><div class="num">${money(s.profit)}</div></div><div class="card"><span class="muted">قيمة المخزون</span><div class="num">${money(s.stockValue)}</div></div><div class="card"><span class="muted">ديون</span><div class="num">${money(s.debt)}</div></div></div><div class="section"><h3>أفضل المنتجات</h3>${db.products.map(p=>`<p>${p.emoji} ${p.name} — الكمية الحالية ${p.qty}</p>`).join('')}</div>`}
+function render_barcode(){content.innerHTML=`<div class="section"><h3>طباعة باركود المنتجات</h3><div class="grid3">${db.products.map(p=>`<div class="card printable"><h3>${p.name}</h3><div style="font-family:monospace;font-size:28px;letter-spacing:2px">||||||||||</div><b>${p.barcode}</b><p>${money(p.sell)}</p></div>`).join('')}</div><br><button class="btn primary" onclick="window.print()">طباعة</button></div>`}
+
+function roleLabel(r){return r==='admin'?'مدير':r==='assistant'?'مساعد مدير':r==='cashier'?'كاشير':'مشاهد'}
+function render_employees(){
+ if(currentUser.role!=='admin')return content.innerHTML=`<div class="section"><h3>الموظفون</h3><p class="muted">هذا القسم للمدير فقط</p></div>`;
+ content.innerHTML=`<div class="section"><h3>إضافة موظف</h3><p class="muted">أي موظف تضيفه هون بقدر يدخل من شاشة الدخول باليوزر والباسورد تبعه.</p>
+ <div class="form">
+   <input id="en" placeholder="اسم الموظف">
+   <input id="eu" placeholder="Username / اليوزر">
+   <input id="epw" placeholder="Password / الباسورد">
+   <input id="ej" placeholder="شو بشتغل عندك؟ مثال: كاشير / مساعد / مدير فرع">
+   <select id="er"><option value="cashier">كاشير</option><option value="assistant">مساعد مدير</option><option value="viewer">مشاهد</option><option value="admin">مدير</option></select>
+   <button class="btn primary" onclick="addEmployee()">إضافة الموظف</button>
+ </div></div>
+ <div class="section"><div class="table-wrap"><table><thead><tr><th>الاسم</th><th>اليوزر</th><th>الباسورد</th><th>الشغل</th><th>الصلاحية</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody>
+ ${db.employees.map(e=>`<tr><td>${e.name}</td><td>${e.username}</td><td>${e.password}</td><td>${e.job||''}</td><td>${roleLabel(e.role)}</td><td><span class="badge ${e.active!==false?'ok':'danger'}">${e.active!==false?'فعال':'موقوف'}</span></td><td><button class="btn" onclick="editEmployee('${e.id}')">تعديل</button> <button class="btn warn" onclick="toggleEmployee('${e.id}')">${e.active!==false?'إيقاف':'تفعيل'}</button> <button class="btn danger" onclick="deleteEmployee('${e.id}')">حذف</button></td></tr>`).join('')}
+ </tbody></table></div></div>`
+}
+function addEmployee(){
+ if(currentUser.role!=='admin')return deny();
+ let username=eu.value.trim();
+ if(!en.value.trim()||!username||!epw.value)return toast('عبّي الاسم واليوزر والباسورد');
+ if(db.employees.some(e=>e.username===username))return toast('هذا اليوزر مستخدم');
+ db.employees.push({id:uid(),name:en.value.trim(),username,password:epw.value,job:ej.value.trim()||'موظف',role:er.value,active:true});
+ db.activities.push({date:now(),text:'إضافة موظف '+en.value.trim()});save();render_employees();toast('تمت إضافة الموظف')
+}
+function editEmployee(id){
+ if(currentUser.role!=='admin')return deny();
+ let e=db.employees.find(x=>x.id===id);if(!e)return;
+ modal.innerHTML=`<div class="modal-box"><h3>تعديل موظف</h3><div class="form">
+ <input id="een" value="${e.name}"><input id="eeu" value="${e.username}"><input id="eepw" value="${e.password}"><input id="eej" value="${e.job||''}">
+ <select id="eer"><option value="cashier" ${e.role==='cashier'?'selected':''}>كاشير</option><option value="assistant" ${e.role==='assistant'?'selected':''}>مساعد مدير</option><option value="viewer" ${e.role==='viewer'?'selected':''}>مشاهد</option><option value="admin" ${e.role==='admin'?'selected':''}>مدير</option></select>
+ </div><br><button class="btn primary" onclick="saveEmployee('${id}')">حفظ</button> <button class="btn" onclick="closeModal()">إغلاق</button></div>`;modal.classList.remove('hidden')
+}
+function saveEmployee(id){
+ let e=db.employees.find(x=>x.id===id);let newUser=eeu.value.trim();
+ if(!newUser||!eepw.value||!een.value.trim())return toast('عبّي الاسم واليوزر والباسورد');
+ if(db.employees.some(x=>x.id!==id&&x.username===newUser))return toast('هذا اليوزر مستخدم');
+ Object.assign(e,{name:een.value.trim(),username:newUser,password:eepw.value,job:eej.value.trim()||'موظف',role:eer.value});
+ save();closeModal();render_employees();toast('تم تعديل الموظف')
+}
+function toggleEmployee(id){let e=db.employees.find(x=>x.id===id);if(!e)return;if(e.username==='mahmoud')return toast('لا يمكن إيقاف حساب المدير الأساسي');e.active=e.active===false;save();render_employees()}
+function deleteEmployee(id){let e=db.employees.find(x=>x.id===id);if(!e)return;if(e.username==='mahmoud')return toast('لا يمكن حذف حساب المدير الأساسي');if(confirm('حذف الموظف؟')){db.employees=db.employees.filter(x=>x.id!==id);save();render_employees()}}
+
+function render_settings(){content.innerHTML=`<div class="section"><h3>الإعدادات والصلاحيات</h3><p>المستخدم الأساسي: mahmoud</p><p>كلمة المرور: mahmoud@2005</p><p>إضافة المستخدمين من قسم الموظفين 👨‍💼</p><p>الصلاحيات: مدير / مساعد مدير / كاشير / مشاهد</p><button class="btn danger" onclick="if(confirm('حذف كل البيانات؟')){localStorage.removeItem('jbl_db');load();go('dashboard')}">إعادة ضبط البيانات</button></div>`}
+function backup(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='jbl-backup.json';a.click()}
+if(currentUser)start(); else {document.body.classList.toggle('light',theme==='light')}
+</script>
+</body>
+</html>
